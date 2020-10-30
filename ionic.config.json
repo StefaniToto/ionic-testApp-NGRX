@@ -1,0 +1,8 @@
+{
+  "name": "hungrydient",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "55776c5f"
+}
