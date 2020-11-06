@@ -1,50 +1,73 @@
-import * as actions from '../store/recipe.actions';
-import { EntityState, createEntityAdapter } from '@ngrx/entity';
-import { createFeatureSelector } from '@ngrx/store';
+
+import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
+import { Action, createFeatureSelector, createReducer, on } from '@ngrx/store';
+import * as RecipeActions from './recipe.actions';
+
+export const recipesFeatureKey = 'recipes';
 
 export interface Recipe {
-    id: string;
+    recipeId: string;
     recipeTitle: string;
 }
 
 // entity adapter
-export const recipeAdapter = createEntityAdapter<Recipe>();
-export interface State extends EntityState<Recipe> {}
+export const recipeAdapter: EntityAdapter<Recipe> = createEntityAdapter<Recipe>();
+export interface RecipeState extends EntityState<Recipe> {
+  error: any;
+  selectedRecipe: Recipe;
+}
 
-export const initialState: State = recipeAdapter.getInitialState();
+export const initialState: RecipeState = recipeAdapter.getInitialState({
+  error: undefined,
+  selectedRecipe: undefined
+});
 
+export const recipeReducer = createReducer(
+  initialState,
 
-// reducer
-export function recipeReducer(
-    state: State = initialState,
-    action: actions.RecipeActions) {
+  on(RecipeActions.addRecipeSuccess, (state, action) => {
+    return recipeAdapter.addOne(action.recipe, state);
+  }),
+  on(RecipeActions.addRecipeFailure, (state, action) => {
+    return {
+      ...state,
+      error: action.error
+    };
+  }),
+  on(RecipeActions.loadRecipesSuccess, (state, action) =>
+    recipeAdapter.setAll(action.recipes, state)
+  ),
+  on(RecipeActions.loadRecipesFailure, (state, action) => {
+    return {
+      ...state,
+      error: action.error
+    };
+  }
+  ),
+  on(RecipeActions.loadRecipeSuccess, (state, action) => {
+    return {
+      ...state,
+      selectedRecipe: action.selectedRecipe
+    };
+  }
+  ),
+  on(RecipeActions.loadRecipeFailure, (state, action) => {
+    return {
+      ...state,
+      error: action.error
+    };
+  }
+  ),
+);
 
-        switch (action.type) {
-
-            case actions.ADDED:
-                return recipeAdapter.addOne(action.payload, state);
-
-            case actions.MODIFIED:
-                return recipeAdapter.updateOne({
-                    id: action.payload.id,
-                    changes: action.payload,
-                }, state);
-
-            case actions.REMOVED:
-                return recipeAdapter.removeOne(action.payload.id, state);
-
-            default:
-                return state;
-        }
-    }
-
-// create default selectors
-export const getRecipeState = createFeatureSelector<State>('recipe');
+export function reducer(state: RecipeState | undefined, action: Action) {
+  return recipeReducer(state, action);
+}
 
 export const {
     selectIds,
     selectEntities,
     selectAll,
     selectTotal,
-} = recipeAdapter.getSelectors(getRecipeState);
+} = recipeAdapter.getSelectors();
 

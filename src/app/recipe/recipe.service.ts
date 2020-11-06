@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { AngularFirestore } from '@angular/fire/firestore';
+import { from, Observable } from 'rxjs';
 import { Recipe } from '../store/recipe.reducer';
 
 @Injectable({
@@ -13,15 +14,18 @@ export class RecipeService {
   ) { }
 
 
-  create_Recipe(recipe: Recipe) {
-    return this.firestore.collection('recipes').add(recipe);
+  createRecipe(recipe: Recipe): Observable<any> {
+    return from(this.firestore.collection<Recipe>('recipes').add(recipe));
   }
 
-  update_Recipe(recipeId: string, changes){
-    this.firestore.doc('recipes/' + recipeId).update(changes);
+
+  getRecipes(): Observable<Recipe[]> {
+    return this.firestore.collection<Recipe>('recipes').valueChanges();
+
   }
 
-  delete_Recipe(recipeId: string) {
-    this.firestore.doc('recipes/' + recipeId).delete();
+  getRecipe(recipeId: string): Observable<any> {
+    return from(this.firestore.doc('recipes/' + recipeId).snapshotChanges());
+
   }
 }

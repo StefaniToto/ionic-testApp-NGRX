@@ -4,10 +4,12 @@ import { Router } from '@angular/router';
 
 
 //store 
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import * as actions from './../store/recipe.actions';
 import * as fromRecipe from './../store/recipe.reducer';
 import { Observable } from 'rxjs';
+import { selectRecipes } from '../store/recipe.selectors';
+import { Recipe } from './../store/recipe.reducer';
 
 @Component({
   selector: 'app-recipe',
@@ -15,6 +17,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['recipe.page.scss']
 })
 export class RecipePage implements OnInit{
+
+  recipes$: Observable<Recipe[]>;
 
   recipes: any = [
     {name: 'Lasagne a la bolognaise', src: '../../../assets/recipeImages/Lasagne.jpg'},
@@ -48,24 +52,27 @@ export class RecipePage implements OnInit{
     console.log('Segment changed', ev);
   }
 
-  constructor(public actionSheetController: ActionSheetController, private router: Router, private store: Store<fromRecipe.State>) {}
+  constructor(public actionSheetController: ActionSheetController, private router: Router, private store: Store<fromRecipe.RecipeState>) {}
 
   ngOnInit() {
-    this.recipesNew = this.store.select(fromRecipe.selectAll);
-    this.store.dispatch(new actions.Query());
+   // this.recipesNew = this.store.select(fromRecipe.selectAll);
+ //   this.store.dispatch(new actions.Query());
+  this.store.dispatch(actions.loadRecipes());
+  this.loadRecipes();
   }
 
-  createRecipe() {
-    const recipe: fromRecipe.Recipe = {
-      id: new Date().getUTCMilliseconds().toString(),
-      recipeTitle: 'my Title'
-    };
-    this.store.dispatch(new actions.Added(recipe));
-  }
+  // createRecipe() {
+  //   const recipe: fromRecipe.Recipe = {
+  //     id: new Date().getUTCMilliseconds().toString(),
+  //     recipeTitle: 'my Title'
+  //   };
+  //   this.store.dispatch(new actions.Added(recipe));
+  // }
 
-  updateRecipe(id, recipeTitle) {
-    this.store.dispatch(new actions.Update(id, recipeTitle));
-  }
+  // updateRecipe(id, recipeTitle) {
+  //   this.store.dispatch(new actions.Update(id, recipeTitle));
+  // }
+ 
 
 
   async presentActionSheet() {
@@ -100,6 +107,10 @@ export class RecipePage implements OnInit{
       }]
     });
     await actionSheet.present();
+  }
+
+  loadRecipes() {
+    this.recipes$ = this.store.pipe(select(selectRecipes));
   }
 
 

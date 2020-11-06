@@ -1,54 +1,50 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
+import { Update } from '@ngrx/entity';
 import { Recipe } from './recipe.reducer';
 
-export const QUERY = '[RECIPE] query recipes';
+// Load list of recipes
+export const loadRecipes = createAction(
+    '[Recipe List Component] Load Recipes',
+);
 
-export const ADDED = '[RECIPE] added';
-export const MODIFIED = '[RECIPE] modified';
-export const REMOVED = '[RECIPE] removed';
+export const loadRecipesSuccess = createAction(
+    '[Recipe List Effect] Load Recipe Success',
+    props<{ recipes: Recipe[] }>()
+);
 
-export const UPDATE = '[RECIPE] update';
-export const SUCCESS = '[RECIPE] update success';
+export const loadRecipesFailure = createAction(
+    '[Recipe List Effect] Load Recipe Failure',
+    props<{ error: any }>()
+);
 
-export class Query implements Action {
-    readonly type = QUERY;
-    constructor() {}
-}
+// Load Recipe
+export const loadRecipe = createAction(
+    '[Recipe Component] Load Recipe',
+    props<{ id: string }>()
+);
 
-export class Added implements Action {
-    readonly type = ADDED;
-    constructor(public payload: Recipe) {}
-}
+export const loadRecipeSuccess = createAction(
+    '[Recipe Effect] Load Recipe Success',
+    props<{ selectedRecipe: Recipe }>()
+);
 
-export class Modified implements Action {
-    readonly type = MODIFIED;
-    constructor(public payload: Recipe) {}
-}
+export const loadRecipeFailure = createAction(
+    '[Recipe Effect] Load Recipe Failure',
+    props<{ error: any }>()
+);
 
+// Add Recipe
+export const addRecipe = createAction(
+    '[Recipe Add Component] Add Recipe',
+    props<{ recipe: Recipe }>()
+);
 
-// run firestore update
-export class Update implements Action {
-    readonly type = UPDATE;
-    constructor(
-        public id: string,
-        public changes: Partial<Recipe>
-        ) {}
-}
+export const addRecipeSuccess = createAction(
+    '[Recipe Add Effect] Add Recipe Success',
+    props<{ recipe: Recipe }>()
+);
 
-export class Removed implements Action {
-    readonly type = REMOVED;
-    constructor(public payload: Recipe) {}
-}
-
-export class Success implements Action {
-    readonly type = SUCCESS;
-    constructor() {}
-}
-
-export type RecipeActions
-= Added
-| Update
-| Removed
-| Modified
-| Success;
-
+export const addRecipeFailure = createAction(
+    '[Recipe Add Effect] Add Recipe Failure',
+    props<{ error: any }>()
+);

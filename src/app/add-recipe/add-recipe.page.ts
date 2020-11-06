@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 export class AddRecipePage implements OnInit {
   formGroup: FormGroup;
 
-  constructor(public fb: FormBuilder, private store: Store<fromRecipe.State>) { }
+  constructor(public fb: FormBuilder, private store: Store<fromRecipe.RecipeState>) { }
 
   ngOnInit() {
     this.formGroup = this.fb.group({
@@ -21,8 +21,8 @@ export class AddRecipePage implements OnInit {
     });
   }
 
-  createRecipe(id, recipeTitle) {
-      this.store.dispatch(new actions.Added({recipeTitle: recipeTitle, id: '1233'}));
+  createRecipe(recipe: fromRecipe.Recipe): void {
+    this.store.dispatch(actions.addRecipe({recipe}));
   }
 
 }

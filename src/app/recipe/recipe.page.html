@@ -14,7 +14,7 @@
     </ion-segment-button>
   </ion-segment>
 <ion-content>
-  <div *ngFor="let recipe of recipesNew | async">
+  <div *ngFor="let recipe of recipes$ | async">
     <app-recipe-item [recipes]="recipe"></app-recipe-item>
   </div>
 </ion-content>
@@ -23,5 +23,3 @@
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
 </ion-fab>
-
-<button (click)="createRecipe()">Add</button>
