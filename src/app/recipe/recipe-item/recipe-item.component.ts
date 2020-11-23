@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Store } from '@ngrx/store';
+import * as fromRecipe from './../../store/recipe.reducer';
+import * as actions from './../../store/recipe.actions';
 
 @Component({
   selector: 'app-recipe-item',
@@ -8,7 +11,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class RecipeItemComponent implements OnInit {
   @Input() recipes;
 
-  constructor() { }
+  constructor(private store: Store<fromRecipe.RecipeState>) { }
 
   ngOnInit() {}
 
@@ -16,4 +19,8 @@ export class RecipeItemComponent implements OnInit {
     console.log('you clicked on' + item);
   }
 
+  deleteRecipe(id: string) {
+    this.store.dispatch(actions.deleteRecipe({ id }));
+    console.log(id);
+   }
 }

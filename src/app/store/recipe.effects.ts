@@ -16,7 +16,7 @@ export class RecipeEffects {
     loadRecipes$ = createEffect(() =>
         this.actions$.pipe(
             ofType(fromRecipeActions.loadRecipes),
-            mergeMap(action =>
+            mergeMap(() =>
                 this.recipeService.getRecipes().pipe(
                     map(recipes => fromRecipeActions.loadRecipesSuccess({ recipes })),
                     catchError(error =>
@@ -27,19 +27,6 @@ export class RecipeEffects {
         )
     );
 
-    loadRecipe$ = createEffect(() =>
-    this.actions$.pipe(
-        ofType(fromRecipeActions.loadRecipe),
-        mergeMap(action =>
-            this.recipeService.getRecipe(action.id).pipe(
-                map(recipe => fromRecipeActions.loadRecipeSuccess({selectedRecipe: recipe})),
-                catchError(error =>
-                    of(fromRecipeActions.loadRecipeFailure({ error }))
-                )
-            )
-        )
-    )
-);
 
     createRecipe$ = createEffect(() =>
         this.actions$.pipe(
@@ -54,6 +41,20 @@ export class RecipeEffects {
             )
         )
     );
+
+    deleteRecipe$ = createEffect(() =>
+    this.actions$.pipe(
+        ofType(fromRecipeActions.deleteRecipe),
+        mergeMap(action =>
+            this.recipeService.deleteRecipe(action.id).pipe(
+                map(() => fromRecipeActions.deleteRecipeSuccess({id: action.id})),
+                catchError(error =>
+                    of(fromRecipeActions.deleteRecipeFailure({ error }))
+                )
+            )
+        )
+    )
+);
 
 
     constructor(private actions$: Actions, private afs: AngularFirestore, private recipeService: RecipeService) {}

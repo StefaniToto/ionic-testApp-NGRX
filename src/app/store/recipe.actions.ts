@@ -48,3 +48,19 @@ export const addRecipeFailure = createAction(
     '[Recipe Add Effect] Add Recipe Failure',
     props<{ error: any }>()
 );
+
+// delete recipe
+export const deleteRecipe = createAction(
+    '[Recipe Components] Delete Recipe',
+    props<{ id: string }>()
+);
+
+export const deleteRecipeSuccess = createAction(
+    '[Recipe Delete Effect] Delete Recipe Success',
+    props<{ id: string }>()
+);
+
+export const deleteRecipeFailure = createAction(
+    '[Recipe Delete Effect] Delete Recipe Failure',
+    props<{ error: any }>()
+);

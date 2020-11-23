@@ -45,8 +45,6 @@ export class RecipePage implements OnInit{
     {name: 'Pizza 3 fromages', src: '../../../assets/recipeImages/pizza.jpeg'},
   ];
 
-  recipesNew: Observable<any>;
-
 
   segmentChanged(ev: any) {
     console.log('Segment changed', ev);
@@ -57,8 +55,9 @@ export class RecipePage implements OnInit{
   ngOnInit() {
    // this.recipesNew = this.store.select(fromRecipe.selectAll);
  //   this.store.dispatch(new actions.Query());
-  this.store.dispatch(actions.loadRecipes());
-  this.loadRecipes();
+
+ this.store.dispatch(actions.loadRecipes());
+ this.loadRecipes();
   }
 
   // createRecipe() {
@@ -72,7 +71,6 @@ export class RecipePage implements OnInit{
   // updateRecipe(id, recipeTitle) {
   //   this.store.dispatch(new actions.Update(id, recipeTitle));
   // }
- 
 
 
   async presentActionSheet() {
@@ -112,6 +110,4 @@ export class RecipePage implements OnInit{
   loadRecipes() {
     this.recipes$ = this.store.pipe(select(selectRecipes));
   }
-
-
 }
