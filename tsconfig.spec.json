@@ -1,18 +1,29 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/spec",
-    "types": [
-      "jasmine",
-      "node"
-    ]
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noUnusedLocals": true,                /* Report errors on unused locals. */
+    "noUnusedParameters": true,        /* Report errors on unused parameters. */
+    "lib": ["es2017", "dom"],
+    "module": "es2015",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "target": "es5"
   },
-  "files": [
-    "src/test.ts",
-    "src/polyfills.ts"
-  ],
   "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
     "src/**/*.spec.ts",
-    "src/**/*.d.ts"
-  ]
+    "src/**/__tests__/*.ts",
+    "platforms"
+  ],
+  "compileOnSave": false,
+  "atom": {
+    "rewriteTsconfig": false
+  }
 }

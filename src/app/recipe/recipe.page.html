@@ -14,9 +14,10 @@
     </ion-segment-button>
   </ion-segment>
 <ion-content>
-  <div *ngFor="let recipe of recipes$ | async">
-    <app-recipe-item [recipes]="recipe"></app-recipe-item>
-  </div>
+
+    <app-recipe-item></app-recipe-item>
+   
+
 </ion-content>
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">
   <ion-fab-button (click)="presentActionSheet()">

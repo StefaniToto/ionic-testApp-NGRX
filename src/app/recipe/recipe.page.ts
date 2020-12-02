@@ -4,21 +4,21 @@ import { Router } from '@angular/router';
 
 
 //store 
-import { select, Store } from '@ngrx/store';
-import * as actions from './../store/recipe.actions';
-import * as fromRecipe from './../store/recipe.reducer';
-import { Observable } from 'rxjs';
-import { selectRecipes } from '../store/recipe.selectors';
-import { Recipe } from './../store/recipe.reducer';
+import {  Store } from '@ngrx/store';
+
+import { AppState } from '../store/app-state.model';
+import { AutoUnsubscribe } from 'take-while-alive';
+import { LoadDataAction } from '../store/actions/recipe-new.actions';
 
 @Component({
   selector: 'app-recipe',
   templateUrl: 'recipe.page.html',
   styleUrls: ['recipe.page.scss']
 })
+@AutoUnsubscribe()
 export class RecipePage implements OnInit{
 
-  recipes$: Observable<Recipe[]>;
+
 
   recipes: any = [
     {name: 'Lasagne a la bolognaise', src: '../../../assets/recipeImages/Lasagne.jpg'},
@@ -50,27 +50,16 @@ export class RecipePage implements OnInit{
     console.log('Segment changed', ev);
   }
 
-  constructor(public actionSheetController: ActionSheetController, private router: Router, private store: Store<fromRecipe.RecipeState>) {}
+  constructor(
+    private store$: Store<AppState>,
+    public actionSheetController: ActionSheetController, private router: Router) {}
 
   ngOnInit() {
-   // this.recipesNew = this.store.select(fromRecipe.selectAll);
- //   this.store.dispatch(new actions.Query());
+ 
+ this.store$.dispatch(new LoadDataAction(""));
 
- this.store.dispatch(actions.loadRecipes());
- this.loadRecipes();
   }
 
-  // createRecipe() {
-  //   const recipe: fromRecipe.Recipe = {
-  //     id: new Date().getUTCMilliseconds().toString(),
-  //     recipeTitle: 'my Title'
-  //   };
-  //   this.store.dispatch(new actions.Added(recipe));
-  // }
-
-  // updateRecipe(id, recipeTitle) {
-  //   this.store.dispatch(new actions.Update(id, recipeTitle));
-  // }
 
 
   async presentActionSheet() {
@@ -108,6 +97,6 @@ export class RecipePage implements OnInit{
   }
 
   loadRecipes() {
-    this.recipes$ = this.store.pipe(select(selectRecipes));
+   // this.recipes$ = this.store.pipe(select(selectRecipes));
   }
 }

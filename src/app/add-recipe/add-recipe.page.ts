@@ -1,43 +1,54 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import * as actions from './../store/recipe.actions';
-import * as fromRecipe from './../store/recipe.reducer';
-import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { RecipeEffects } from '../store/recipe.effects';
 
 import { File } from '@ionic-native/file/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
-import { stringify } from 'querystring';
+
+import { AutoUnsubscribe } from 'take-while-alive';
+import { AppState } from '../store/app-state.model';
+import { AddDataAction } from '../store/actions/recipe-new.actions';
+import { NavController } from '@ionic/angular';
+import { RecipeItemPage } from '../recipe/recipe-item/recipe-item.page';
 
 @Component({
   selector: 'app-add-recipe',
   templateUrl: './add-recipe.page.html',
   styleUrls: ['./add-recipe.page.scss'],
 })
+@AutoUnsubscribe()
 export class AddRecipePage implements OnInit {
   formGroup: FormGroup;
 
   constructor(
-    public fb: FormBuilder,
-    private store: Store<fromRecipe.RecipeState>,
+    public navCtrl: NavController,
+    private store$: Store<AppState>,
+    public fb: FormBuilder, 
     private router: Router,
     private fileChooser: FileChooser,
-    private file: File) { }
+    private file: File) {
+
+  }
 
   ngOnInit() {
     this.formGroup = this.fb.group({
       recipeTitle: ['']
     });
+
+
   }
 
   createRecipe(formGroup): void {
-    const recipeCreated = {
-      recipeTitle: formGroup.recipeTitle
-    };
-    this.store.dispatch(actions.addRecipe({recipe: recipeCreated}));
-    this.router.navigate(['tabs/recipe']);
+    console.log("itema added", formGroup)
+ 
+ 
+    this.store$.dispatch(new AddDataAction({ recipeTitle: formGroup.recipeTitle }))
+    //this.router.navigateByUrl(['tabs/recipe']);
+
+   // this.navCtrl.goForward(RecipeItemPage, {
+     // params: params
+  //  })
   }
 
   choose() {
